@@ -32,11 +32,11 @@ Dashboard View: Summarized data quality scores and trends
 
 **Backend / Database:**
 
-*Supabase (PostgreSQL)
+* Supabase (PostgreSQL)
 
-*Built-in authentication and API layer
+* Built-in authentication and API layer
 
-*Hosted database with row-level security
+* Hosted database with row-level security
 
 **🌟 Highlights**
 *	Demonstrates data stewardship workflow and quality tracking.
