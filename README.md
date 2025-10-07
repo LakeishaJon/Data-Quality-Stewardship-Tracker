@@ -22,40 +22,39 @@ Dashboard View: Summarized data quality scores and trends
 
 **Frontend:**
 
-+React (Vite)
+*React (Vite)
 
-+TailwindCSS
+*TailwindCSS
 
-+Recharts (for dashboards and visualization)
+*Recharts (for dashboards and visualization)
 
-+Supabase JS client
+*Supabase JS client
 
 **Backend / Database:**
 
-+Supabase (PostgreSQL)
+*Supabase (PostgreSQL)
 
-+Built-in authentication and API layer
+*Built-in authentication and API layer
 
-Hosted database with row-level security
+*Hosted database with row-level security
 
-🌟 Highlights
-•	Demonstrates data stewardship workflow and quality tracking.
-•	Combines business analysis + full-stack development.
-•	Includes analytics visualization for actionable insights.
+**🌟 Highlights**
+*	Demonstrates data stewardship workflow and quality tracking.
+*	Combines business analysis + full-stack development.
+*	Includes analytics visualization for actionable insights.
 
 ⚙️ Installation
-# Clone the repo
+### Clone the repo
 git clone https://github.com/lakeishajon/data-quality-tracker.git
 cd data-quality-tracker
 
-# Backend setup
+### Backend setup
 cd backend
 npm install
 cp .env.example .env
-# Add Supabase (PostgreSQL) URI and JWT secret in .env
+Add Supabase (PostgreSQL) URI and JWT secret in .env
 node server.js
-
-# Frontend setup
+### Frontend setup
 cd ../client
 npm install
 npm start
@@ -63,15 +62,15 @@ npm start
 
 **📊 Future Enhancements**
 
-Role-based access (admin vs. steward)
+*Role-based access (admin vs. steward)
 
-Data quality trend visualization by dataset
+*Data quality trend visualization by dataset
 
-Export to CSV / Excel
+*Export to CSV / Excel
 
-Email or Slack notifications for new issues
+*Email or Slack notifications for new issues
 
-AI-powered suggestions for data improvement
+*AI-powered suggestions for data improvement
 
 👩‍💼 Author
 
