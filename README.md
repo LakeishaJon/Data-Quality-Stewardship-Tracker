@@ -22,13 +22,13 @@ Dashboard View: Summarized data quality scores and trends
 
 **Frontend:**
 
-*React (Vite)
+* React (Vite)
 
-*TailwindCSS
+* TailwindCSS
 
-*Recharts (for dashboards and visualization)
+* Recharts (for dashboards and visualization)
 
-*Supabase JS client
+* Supabase JS client
 
 **Backend / Database:**
 
@@ -62,15 +62,15 @@ npm start
 
 **📊 Future Enhancements**
 
-*Role-based access (admin vs. steward)
+* Role-based access (admin vs. steward)
 
-*Data quality trend visualization by dataset
+* Data quality trend visualization by dataset
 
-*Export to CSV / Excel
+* Export to CSV / Excel
 
-*Email or Slack notifications for new issues
+* Email or Slack notifications for new issues
 
-*AI-powered suggestions for data improvement
+* AI-powered suggestions for data improvement
 
 👩‍💼 Author
 
