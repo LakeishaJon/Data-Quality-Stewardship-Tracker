@@ -1,10 +1,10 @@
-🧮 Data Quality & Stewardship Tracker
+# 🧮 Data Quality & Stewardship Tracker
 Full-Stack Web App | React | Node.js | Express | Supabase (PostgreSQL) | JWT
 
-📌 Overview
+**📌 Overview**
 The Data Quality & Stewardship Tracker is a full-stack web application designed to help teams track, evaluate, and improve data quality across datasets. Built with business analysts, data stewards, and technical users in mind, the system allows users to log issues, assign severity, track trends, and generate reports through a modern and user-friendly interface. This project highlights my skills in business analysis, data stewardship, and full-stack development.
 
-🎯  Features
+**🎯  Features**
 
 Dataset Management: Add, edit, and delete dataset records with key metadata
 
@@ -18,23 +18,23 @@ Real-time Updates: Automatic refresh of dashboards when data changes
 
 Dashboard View: Summarized data quality scores and trends
 
-🧰 Tech Stack
+**🧰 Tech Stack**
 
-**Frontend:
+**Frontend:**
 
-React (Vite)
++React (Vite)
 
-TailwindCSS
++TailwindCSS
 
-Recharts (for dashboards and visualization)
++Recharts (for dashboards and visualization)
 
-Supabase JS client
++Supabase JS client
 
-**Backend / Database:
+**Backend / Database:**
 
-Supabase (PostgreSQL)
++Supabase (PostgreSQL)
 
-Built-in authentication and API layer
++Built-in authentication and API layer
 
 Hosted database with row-level security
 
@@ -61,7 +61,7 @@ npm install
 npm start
 
 
-📊 Future Enhancements
+**📊 Future Enhancements**
 
 Role-based access (admin vs. steward)
 
