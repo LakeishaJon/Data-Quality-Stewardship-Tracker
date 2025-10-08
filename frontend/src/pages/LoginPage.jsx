@@ -20,7 +20,7 @@ export const LoginPage = () => {
 
     try {
       const endpoint = isSignup ? '/auth/signup' : '/auth/signin';
-      const response = await fetch(`http://localhost:5000/api${endpoint}`, {
+      const response = await fetch(`https://fictional-space-capybara-69p4xrv676ph5659-5000.app.github.dev/api${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
