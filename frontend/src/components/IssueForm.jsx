@@ -47,8 +47,8 @@ export const IssueForm = ({ issue, categories, severityLevels, onClose }) => {
     try {
       const token = localStorage.getItem('access_token');
       const url = issue 
-        ? `http://localhost:5000/api/issues/${issue.id}`
-        : 'http://localhost:5000/api/issues';
+        ? `https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/issues/${issue.id}`
+        : 'https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/issues';
       
       const method = issue ? 'PUT' : 'POST';
 

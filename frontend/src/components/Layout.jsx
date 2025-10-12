@@ -11,7 +11,7 @@ export const Layout = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:5000/api/auth/signout', {
+      await fetch('https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/auth/signout', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`

@@ -14,7 +14,7 @@ export const Dashboard = () => {
   const fetchDashboardStats = async () => {
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch('http://localhost:5000/api/dashboard/stats', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL.replace('/api', '')}/api/dashboard/stats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -29,10 +29,38 @@ export const Dashboard = () => {
     }
   };
 
-  const handleExportCSV = () => {
+ const handleExportCSV = async () => {
+  try {
     const token = localStorage.getItem('access_token');
-    window.open(`http://localhost:5000/api/export/csv?token=${token}`, '_blank');
-  };
+    const response = await fetch('https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/export/csv', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Export failed');
+    }
+
+    // Get the CSV content
+    const blob = await response.blob();
+    
+    // Create download link
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data-quality-issues.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    
+  } catch (error) {
+    console.error('Export error:', error);
+    alert('Failed to export CSV. Please try again.');
+  }
+};
 
   if (loading) {
     return (

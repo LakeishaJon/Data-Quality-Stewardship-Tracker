@@ -20,11 +20,11 @@ export const LoginPage = () => {
 
     try {
       const endpoint = isSignup ? '/auth/signup' : '/auth/signin';
-      const response = await fetch(`https://fictional-space-capybara-69p4xrv676ph5659-5000.app.github.dev/api${endpoint}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
-      });
+   });
 
       const data = await response.json();
 

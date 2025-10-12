@@ -35,19 +35,18 @@ export const IssuesPage = () => {
 
       // Fetch issues
       const issuesRes = await fetch(
-        `http://localhost:5000/api/issues?${params.toString()}`,
-        { headers }
+        `https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/issues?${params.toString()}`,
       );
       const issuesData = await issuesRes.json();
       setIssues(issuesData.data || []);
 
       // Fetch categories
-      const categoriesRes = await fetch('http://localhost:5000/api/categories', { headers });
+      const categoriesRes = await fetch('https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/categories', { headers })
       const categoriesData = await categoriesRes.json();
       setCategories(categoriesData.data || []);
 
       // Fetch severity levels
-      const severityRes = await fetch('http://localhost:5000/api/severity-levels', { headers });
+      const severityRes = await fetch('https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/severity-levels', { headers })
       const severityData = await severityRes.json();
       setSeverityLevels(severityData.data || []);
 
@@ -63,7 +62,7 @@ export const IssuesPage = () => {
 
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://localhost:5000/api/issues/${id}`, {
+      const response = await fetch(`https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/issues/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
