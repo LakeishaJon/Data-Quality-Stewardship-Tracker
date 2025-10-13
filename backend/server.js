@@ -1,4 +1,3 @@
-// server.js
 // ===============================
 // Data Quality & Stewardship Tracker Backend
 // Full-Featured Production API
@@ -220,6 +219,49 @@ app.get('/api/auth/me', authenticateUser, (req, res) => {
       full_name: req.user.user_metadata?.full_name
     }
   });
+});
+
+// Refresh Token
+app.post('/api/auth/refresh', async (req, res) => {
+  try {
+    const { refresh_token } = req.body;
+    
+    if (!refresh_token) {
+      return res.status(400).json({
+        success: false,
+        message: 'Refresh token is required'
+      });
+    }
+    
+    const { data, error } = await supabase.auth.refreshSession({
+      refresh_token
+    });
+    
+    if (error) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid or expired refresh token'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'Token refreshed successfully',
+      session: {
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+        expires_at: data.session.expires_at
+      }
+    });
+    
+  } catch (error) {
+    console.error('Token refresh error:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to refresh token',
+      error: NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
 });
 
 // ===============================

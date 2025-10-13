@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, AlertCircle, CheckCircle, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { dashboardAPI, exportAPI } from '../services/api';
 
 export const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -13,54 +14,18 @@ export const Dashboard = () => {
 
   const fetchDashboardStats = async () => {
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL.replace('/api', '')}/api/dashboard/stats`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch stats');
-
-      const data = await response.json();
-      setStats(data.data);
+      const response = await dashboardAPI.getStats();
+      setStats(response.data.data);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }
   };
 
- const handleExportCSV = async () => {
-  try {
-    const token = localStorage.getItem('access_token');
-    const response = await fetch('https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/export/csv', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Export failed');
-    }
-
-    // Get the CSV content
-    const blob = await response.blob();
-    
-    // Create download link
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'data-quality-issues.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-    
-  } catch (error) {
-    console.error('Export error:', error);
-    alert('Failed to export CSV. Please try again.');
-  }
-};
+  const handleExportCSV = () => {
+    exportAPI.downloadCSV();
+  };
 
   if (loading) {
     return (
@@ -73,7 +38,14 @@ export const Dashboard = () => {
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg">
-        Error: {error}
+        <p className="font-semibold">Error loading dashboard</p>
+        <p className="text-sm mt-1">{error}</p>
+        <button 
+          onClick={fetchDashboardStats}
+          className="mt-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+        >
+          Retry
+        </button>
       </div>
     );
   }
@@ -82,7 +54,6 @@ export const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
@@ -90,17 +61,15 @@ export const Dashboard = () => {
         </div>
         <button
           onClick={handleExportCSV}
-          className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+          className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-lg hover:shadow-xl"
         >
           <Download className="w-4 h-4 mr-2" />
           Export CSV
         </button>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Total Issues */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Issues</p>
@@ -114,8 +83,7 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        {/* Open Issues */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Open Issues</p>
@@ -129,8 +97,7 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        {/* Resolved Issues */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Resolved</p>
@@ -144,8 +111,7 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        {/* Average Quality Score */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Avg Quality</p>
@@ -164,7 +130,6 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* Quality Scores Chart */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Overall Quality Scores</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -192,7 +157,6 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* Dataset Quality Chart */}
       {datasetStats && datasetStats.length > 0 && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Quality by Dataset</h2>
@@ -211,7 +175,6 @@ export const Dashboard = () => {
         </div>
       )}
 
-      {/* Dataset Table */}
       {datasetStats && datasetStats.length > 0 && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200">
@@ -266,7 +229,7 @@ export const Dashboard = () => {
         </div>
       )}
 
-      {/* Empty State */}
+  {/* Empty State */}
       {(!datasetStats || datasetStats.length === 0) && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
           <AlertCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -274,10 +237,10 @@ export const Dashboard = () => {
           <p className="text-gray-600 mb-4">
             Start by adding your first data quality issue
           </p>
-          <a
-            href="/issues"
+          
+            <a>href="/issues"
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
+       
             Go to Issues
           </a>
         </div>

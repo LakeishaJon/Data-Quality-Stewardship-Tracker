@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Edit2, Trash2, X } from 'lucide-react';
+import { Plus, Search, Filter, Edit2, Trash2 } from 'lucide-react';
 import { IssueForm } from '../components/IssueForm';
+import { issuesAPI, metadataAPI } from '../services/api';
 
 export const IssuesPage = () => {
   const [issues, setIssues] = useState([]);
@@ -9,6 +10,7 @@ export const IssuesPage = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingIssue, setEditingIssue] = useState(null);
+  const [error, setError] = useState('');
   
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,55 +25,43 @@ export const IssuesPage = () => {
 
   const fetchData = async () => {
     setLoading(true);
+    setError('');
+    
     try {
-      const token = localStorage.getItem('access_token');
-      const headers = { 'Authorization': `Bearer ${token}` };
-
       // Build query params
-      const params = new URLSearchParams();
-      if (filterCategory) params.append('category', filterCategory);
-      if (filterSeverity) params.append('severity', filterSeverity);
-      if (filterStatus) params.append('status', filterStatus);
+      const params = {};
+      if (filterCategory) params.category = filterCategory;
+      if (filterSeverity) params.severity = filterSeverity;
+      if (filterStatus) params.status = filterStatus;
 
-      // Fetch issues
-      const issuesRes = await fetch(
-        `https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/issues?${params.toString()}`,
-      );
-      const issuesData = await issuesRes.json();
-      setIssues(issuesData.data || []);
+      // Fetch all data in parallel
+      const [issuesRes, categoriesRes, severityRes] = await Promise.all([
+        issuesAPI.getAll(params),
+        metadataAPI.getCategories(),
+        metadataAPI.getSeverityLevels()
+      ]);
 
-      // Fetch categories
-      const categoriesRes = await fetch('https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/categories', { headers })
-      const categoriesData = await categoriesRes.json();
-      setCategories(categoriesData.data || []);
-
-      // Fetch severity levels
-      const severityRes = await fetch('https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/severity-levels', { headers })
-      const severityData = await severityRes.json();
-      setSeverityLevels(severityData.data || []);
+      setIssues(issuesRes.data.data || []);
+      setCategories(categoriesRes.data.data || []);
+      setSeverityLevels(severityRes.data.data || []);
 
     } catch (error) {
       console.error('Error fetching data:', error);
+      setError('Failed to load data. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this issue?')) return;
+    if (!window.confirm('Are you sure you want to delete this issue?')) return;
 
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await fetch(`https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/issues/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        fetchData();
-      }
+      await issuesAPI.delete(id);
+      fetchData(); // Refresh list
     } catch (error) {
       console.error('Error deleting issue:', error);
+      alert('Failed to delete issue. Please try again.');
     }
   };
 
@@ -129,6 +119,20 @@ export const IssuesPage = () => {
           Add New Issue
         </button>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg">
+          <p className="font-semibold">Error</p>
+          <p className="text-sm mt-1">{error}</p>
+          <button 
+            onClick={fetchData}
+            className="mt-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Search and Filters */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
@@ -225,7 +229,11 @@ export const IssuesPage = () => {
         </div>
       ) : filteredIssues.length === 0 ? (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-          <p className="text-gray-600">No issues found. Create your first one!</p>
+          <p className="text-gray-600">
+            {searchTerm || filterCategory || filterSeverity || filterStatus
+              ? 'No issues match your filters. Try adjusting them.'
+              : 'No issues found. Create your first one!'}
+          </p>
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -261,11 +269,11 @@ export const IssuesPage = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredIssues.map((issue) => (
-                  <tr key={issue.id} className="hover:bg-gray-50">
+                  <tr key={issue.id} className="hover:bg-gray-50 transition">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {issue.dataset_name}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                    <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate" title={issue.description}>
                       {issue.description}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -282,7 +290,7 @@ export const IssuesPage = () => {
                           {issue.severity.name}
                         </span>
                       ) : (
-                        'N/A'
+                        <span className="text-gray-400">N/A</span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -293,27 +301,27 @@ export const IssuesPage = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <div className="flex space-x-1">
-                        <span title="Accuracy">A: {issue.accuracy_score || '-'}</span>
+                      <div className="flex space-x-1 text-xs">
+                        <span title="Accuracy" className="font-medium">A: {issue.accuracy_score || '-'}</span>
                         <span>/</span>
-                        <span title="Completeness">C: {issue.completeness_score || '-'}</span>
+                        <span title="Completeness" className="font-medium">C: {issue.completeness_score || '-'}</span>
                         <span>/</span>
-                        <span title="Timeliness">T: {issue.timeliness_score || '-'}</span>
+                        <span title="Timeliness" className="font-medium">T: {issue.timeliness_score || '-'}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex justify-end space-x-2">
                         <button
                           onClick={() => handleEdit(issue)}
-                          className="text-blue-600 hover:text-blue-900"
-                          title="Edit"
+                          className="text-blue-600 hover:text-blue-900 transition"
+                          title="Edit Issue"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(issue.id)}
-                          className="text-red-600 hover:text-red-900"
-                          title="Delete"
+                          className="text-red-600 hover:text-red-900 transition"
+                          title="Delete Issue"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

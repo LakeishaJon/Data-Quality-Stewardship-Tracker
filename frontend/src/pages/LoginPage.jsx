@@ -37,7 +37,7 @@ export const LoginPage = () => {
         setPassword('');
         setError('✅ Account created! Please sign in.');
       } else {
-        login(data.user, data.session.access_token);
+        login(data.user, data.session.access_token, data.session.refresh_token);
         navigate('/dashboard');
       }
     } catch (err) {
@@ -48,7 +48,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4 overflow-auto">
       <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
