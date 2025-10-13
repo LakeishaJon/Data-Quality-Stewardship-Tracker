@@ -34,7 +34,6 @@ Git
 ⚙️ Installation
 ### Clone the repo
 git clone https://github.com/lakeishajon/data-quality-tracker.git
-cd data-quality-tracker
 
 ### Backend setup
 cd backend
