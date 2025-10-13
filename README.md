@@ -36,15 +36,15 @@ Git
 git clone https://github.com/lakeishajon/data-quality-tracker.git
 
 ### Backend setup
-cd backend
-npm install
-cp .env.example .env
-Add Supabase (PostgreSQL) URI and JWT secret in .env
-node server.js
+- cd backend
+- npm install
+- cp .env.example .env
+- Add Supabase (PostgreSQL) URI and JWT secret in .env
+- node server.js
 ### Frontend setup
-cd frontend
-npm install
-npm start
+- cd frontend
+- npm install
+- npm start
 
 
 **📊 Future Enhancements**
