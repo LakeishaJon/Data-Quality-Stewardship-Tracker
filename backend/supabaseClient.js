@@ -1,7 +1,6 @@
-// supabase.js
 // ===============================
 // Supabase Client Configuration
-// Production-Ready with Error Handling
+//  Error Handling
 // ===============================
 
 const { createClient } = require('@supabase/supabase-js');
