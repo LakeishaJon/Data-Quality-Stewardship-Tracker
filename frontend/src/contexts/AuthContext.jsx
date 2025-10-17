@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error('No refresh token available');
       }
 
-      const response = await fetch('https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/auth/refresh', {
+      const response = await fetch('https://data-quality-stewardship-tracker-backend.onrender.com/api/auth/refresh', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh_token })

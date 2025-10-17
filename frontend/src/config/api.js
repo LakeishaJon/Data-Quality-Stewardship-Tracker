@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://data-quality-stewardship-tracker-backend.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://data-quality-stewardship-tracker-backend.onrender.com/api';
 
 export const apiUrl = (endpoint) => {
   

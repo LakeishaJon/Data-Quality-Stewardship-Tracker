@@ -3,7 +3,7 @@ import axios from 'axios';
 // ===============================
 // API Configuration
 // ===============================
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://data-quality-stewardship-tracker-backend.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
