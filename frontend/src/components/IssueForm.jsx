@@ -49,8 +49,8 @@ export const IssueForm = ({ issue, categories, severityLevels, onClose }) => {
       const token = localStorage.getItem('access_token');
         
       const url = issue 
-        ? apiUrl(`/api/issues/${issue.id}`)
-        : apiUrl('/api/issues');
+        ? apiUrl(`/issues/${issue.id}`)
+        : apiUrl('/issues');
       
       const method = issue ? 'PUT' : 'POST';
 
