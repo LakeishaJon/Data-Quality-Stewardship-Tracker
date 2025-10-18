@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import { apiUrl } from '../config/api'; 
 
 export const IssueForm = ({ issue, categories, severityLevels, onClose }) => {
   const [formData, setFormData] = useState({
@@ -46,9 +47,10 @@ export const IssueForm = ({ issue, categories, severityLevels, onClose }) => {
 
     try {
       const token = localStorage.getItem('access_token');
+        
       const url = issue 
-        ? `https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/issues/${issue.id}`
-        : 'https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/issues';
+        ? apiUrl(`/api/issues/${issue.id}`)
+        : apiUrl('/api/issues');
       
       const method = issue ? 'PUT' : 'POST';
 

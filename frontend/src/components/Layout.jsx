@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, FileText, LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { apiUrl } from '../config/api'; 
 
 export const Layout = ({ children }) => {
   const { user, logout } = useAuth();
@@ -11,7 +12,8 @@ export const Layout = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      await fetch('https://fictional-space-capybara-69p4xrv676jxh5659-5000.app.github.dev/api/auth/signout', {
+      
+      await fetch(apiUrl('/api/auth/signout'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`
